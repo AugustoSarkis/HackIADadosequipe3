@@ -1,38 +1,28 @@
-'''O codigo em PY que sera usado para se conectar com strimilish e autmatizar a producao das ATs'''
-import google.generativeai as genai
-import time
 import streamlit as st
+import google.generativeai as genai
 
-CHAVE_API = "SUA CHAVE"
-genai.configure(api_key=CHAVE_API)
+# ... (suas configurações de API e do modelo) ...
 
-caminho_do_arquivo = "ARQUIVOOOOO"
-print(f"Fazendo upload de {caminho_do_arquivo}...")
+# 1. O usuário faz o upload do arquivo de texto
+arquivo_enviado = st.file_uploader("Faça o upload da transcrição", type=["txt"])
 
-arquivo_enviado = genai.upload_file(path=caminho_do_arquivo, display_name="Relatorio Financeiro Q3")
-
-while arquivo_enviado.state.name == "PROCESSING":
-    print("Processando arquivo no servidor do Google...")
-    time.sleep(2)
-    # Atualiza o status do arquivo
-    arquivo_enviado = genai.get_file(arquivo_enviado.name)
-
-if arquivo_enviado.state.name == "FAILED":
-    raise ValueError("Erro no processamento do arquivo.")
+if arquivo_enviado is not None:
+    # 2. Lemos o texto diretamente da memória do Streamlit
+    texto_da_reuniao = arquivo_enviado.getvalue().decode("utf-8")
     
-print(f"Upload concluído! URI do arquivo: {arquivo_enviado.uri}")
-
-# Flash é ótimo, mas para PDFs complexos de dezenas de páginas, o Pro pode ser mais preciso
-modelo = genai.GenerativeModel(model_name="gemini-1.5-flash")
-
-prompt = """
-Analise este relatório financeiro e extraia as seguintes informações:
-1. Qual foi a receita total do trimestre?
-2. Quais foram os principais custos operacionais citados?
-Por favor, seja direto.
-"""
-
-print("Analisando o documento...\n")
-
-resposta = modelo.generate_content([arquivo_enviado, prompt])
-
+    st.write("Analisando a transcrição...")
+    
+    # 3. Injetamos o texto diretamente no prompt, sem usar upload_file
+    prompt = f"""
+    Você é um assistente comercial. Analise a transcrição abaixo e gere uma ata estruturada.
+    Aponte também as informações essenciais que não foram mapeadas.
+    
+    Transcrição:
+    {texto_da_reuniao}
+    """
+    
+    # 4. Chamamos o modelo de forma direta
+    resposta = modelo.generate_content(prompt)
+    
+    # 5. Exibimos o resultado
+    st.write(resposta.text)
