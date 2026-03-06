@@ -5,12 +5,9 @@ from PyPDF2 import PdfReader
 # 1. Configuração da API
 # Lógica: O Streamlit Cloud lida melhor com secrets nativos. 
 # Certifique-se de colocar sua chave em "Advanced Settings" > "Secrets" no painel do Streamlit Cloud
-try:
-    chave_api = st.secrets["GEMINI_API_KEY"]
-except KeyError:
     # Fallback de segurança caso esteja rodando localmente sem o secrets.toml
-    import os
-    chave_api = os.getenv("GEMINI_API_KEY")
+import os
+chave_api = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=chave_api)
 
