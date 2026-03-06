@@ -2,10 +2,10 @@
 import google.generativeai as genai
 import time
 
-CHAVE_API = "COLOQUE_SUA_CHAVE_AQUI"
+CHAVE_API = "AIzaSyAFJidGpngLdTkspEtnrTKOliEHDuaYl9k"
 genai.configure(api_key=CHAVE_API)
 
-caminho_do_arquivo = "relatorio_financeiro.pdf"
+caminho_do_arquivo = "ARQUIVOOOOO"
 print(f"Fazendo upload de {caminho_do_arquivo}...")
 
 arquivo_enviado = genai.upload_file(path=caminho_do_arquivo, display_name="Relatorio Financeiro Q3")
