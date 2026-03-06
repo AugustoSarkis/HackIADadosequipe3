@@ -1,8 +1,9 @@
 '''O codigo em PY que sera usado para se conectar com strimilish e autmatizar a producao das ATs'''
 import google.generativeai as genai
 import time
+import streamlit as st
 
-CHAVE_API = "AIzaSyAFJidGpngLdTkspEtnrTKOliEHDuaYl9k"
+CHAVE_API = "SUA CHAVE"
 genai.configure(api_key=CHAVE_API)
 
 caminho_do_arquivo = "ARQUIVOOOOO"
