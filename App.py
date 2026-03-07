@@ -3,18 +3,17 @@ import os
 from google import genai
 from PyPDF2 import PdfReader
 
-# --- 1. Configuração da Página ---
-st.set_page_config(page_title="Assistente de Diagnóstico", page_icon="📝", layout="centered")
+st.set_page_config(page_title="Assistente de Diagnóstico0", page_icon="📝", layout="centered")
 
-# --- 2. Autenticação Segura ---
+# Puxa o Secret do Streamlit e injeta no ambiente do servidor
 try:
-    # A nova biblioteca busca a chave diretamente nas variáveis de ambiente do sistema operacional
     os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
-    # Inicializa o cliente na nova arquitetura
     client = genai.Client()
 except KeyError:
-    st.error("🚨 Chave de API não encontrada. Configure o arquivo '.streamlit/secrets.toml' localmente ou os 'Secrets' no Streamlit Cloud.")
+    st.error("🚨 Chave de API não encontrada nos Secrets do Streamlit Cloud.")
     st.stop()
+
+# ... (resto do seu código, lembrando de usar client.models.generate_content) ...
 
 # --- 3. Funções Modulares ---
 def extrair_texto_pdf(arquivo):
