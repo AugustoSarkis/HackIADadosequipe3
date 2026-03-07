@@ -1,23 +1,22 @@
 import streamlit as st
-import google.generativeai as genai
+import os
+from google import genai
 from PyPDF2 import PdfReader
 
 # --- 1. Configuração da Página ---
-st.set_page_config(page_title="Assistente de Diagnósticoooo", page_icon="📝", layout="centered")
+st.set_page_config(page_title="Assistente de Diagnóstico", page_icon="📝", layout="centered")
 
 # --- 2. Autenticação Segura ---
-# Lógica: Usamos um bloco try-except. Se o app rodar sem o secrets.toml configurado 
-# (ou sem a chave na nuvem), ele avisa o usuário e para a execução (st.stop()), 
-# evitando que o código quebre com erros complexos de API mais para frente.
 try:
-    chave_api = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=chave_api)
+    # A nova biblioteca busca a chave diretamente nas variáveis de ambiente do sistema operacional
+    os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+    # Inicializa o cliente na nova arquitetura
+    client = genai.Client()
 except KeyError:
     st.error("🚨 Chave de API não encontrada. Configure o arquivo '.streamlit/secrets.toml' localmente ou os 'Secrets' no Streamlit Cloud.")
     st.stop()
 
 # --- 3. Funções Modulares ---
-# Lógica: Separar o processamento de dados da interface gráfica deixa o código mais limpo e testável.
 def extrair_texto_pdf(arquivo):
     leitor_pdf = PdfReader(arquivo)
     texto = ""
@@ -39,15 +38,12 @@ if arquivo_pdf is not None:
         
         with st.spinner("Analisando a transcrição e conectando ao LLM. Isso pode levar alguns segundos..."):
             try:
-                # Extração e Validação de Dados
                 texto_da_reuniao = extrair_texto_pdf(arquivo_pdf)
                 
-                # Prevenção de falhas: Verifica se o PDF não é apenas uma imagem escaneada
                 if not texto_da_reuniao.strip():
                     st.warning("Não foi possível ler o texto deste PDF. Verifique se ele não é uma imagem escaneada.")
                     st.stop()
                 
-                # Engenharia de Prompt (Focada em inteligência e análise de projetos)
                 prompt = f"""
                 Você atua como analista de projetos. Sua tarefa é analisar a transcrição de uma reunião de diagnóstico e estruturar as informações para a equipe.
                 
@@ -59,13 +55,13 @@ if arquivo_pdf is not None:
                 {texto_da_reuniao}
                 """
                 
-                # Chamada do Modelo
-                # A versão atualizada e super rápida
+                # Chamada do Modelo usando a sintaxe da nova biblioteca
+                # Apontando para um modelo validado na sua lista
+                resposta = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt
+                )
                 
-                modelo = genai.GenerativeModel('gemini-1.5-flash')
-                resposta = modelo.generate_content(prompt)
-                
-                # Exibição dos Resultados em Abas (Melhor UX)
                 st.success("Análise concluída com sucesso!")
                 
                 aba_resultado, aba_texto_original = st.tabs(["📊 Diagnóstico Gerado", "📄 Texto Extraído (Debug)"])
