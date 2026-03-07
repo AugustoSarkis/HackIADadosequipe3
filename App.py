@@ -60,7 +60,9 @@ if arquivo_pdf is not None:
                 """
                 
                 # Chamada do Modelo
-                modelo = genai.GenerativeModel('gemini-1.5-flash')
+                # A versão atualizada e super rápida
+                
+                modelo = genai.GenerativeModel('gemini-2.5-flash')
                 resposta = modelo.generate_content(prompt)
                 
                 # Exibição dos Resultados em Abas (Melhor UX)
