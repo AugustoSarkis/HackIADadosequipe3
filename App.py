@@ -3,7 +3,7 @@ import google.generativeai as genai
 from PyPDF2 import PdfReader
 
 # --- 1. Configuração da Página ---
-st.set_page_config(page_title="Assistente de Diagnóstico", page_icon="📝", layout="centered")
+st.set_page_config(page_title="Assistente de Diagnósticoooo", page_icon="📝", layout="centered")
 
 # --- 2. Autenticação Segura ---
 # Lógica: Usamos um bloco try-except. Se o app rodar sem o secrets.toml configurado 
