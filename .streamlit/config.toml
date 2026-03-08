@@ -12,13 +12,10 @@ backgroundColor = "#130525"
 # Roxo Escuro/Intermediário (Secondary Background Color)
 # Usado na barra lateral e no fundo de áreas de texto/upload. É um tom de roxo 
 # levemente mais claro que o fundo principal para criar uma "camada" visual sobreposta.
-secondaryBackgroundColor = "#220B3D"
+secondaryBackgroundColor = "#120421"
 
-# Roxo Muito Claro/Lilás (Text Color)
-# Em telas escuras, texto branco puro pode "estourar" a visão após muita leitura. 
-# Usar um lilás super claro (quase branco) mantém o contraste excelente para ler 
-# as atas longas, descansando os olhos e mantendo a harmonia de cores.
-textColor = "#F3E8FF"
+
+textColor = "#f39334"
 
 # Fonte sem serifa, limpa e padronizada para dashboards de dados.
 font = "sans serif"
