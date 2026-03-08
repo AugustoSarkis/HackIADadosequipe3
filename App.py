@@ -272,3 +272,30 @@ if st.session_state.resultados_processados:
                     col_t4.metric("Compressão de Ruído", f"{taxa_compressao:.1f}%")
                     col_t5.metric("Velocidade", f"{tokens_por_segundo:,.0f} t/s")
                     col_t6.metric("Economia Estimada", f"~{(t_in / 300):.0f} min")
+
+# --- Injeção de CSS Customizado para o File Uploader ---
+st.markdown("""
+    <style>
+    /* Altera o fundo do card do arquivo carregado */
+    [data-testid="stUploadedFile"] {
+        background-color: #120421 !important; /* Usando o seu secondaryBackgroundColor */
+        border: 1px solid #9D4EDD !important; /* Borda usando a sua primaryColor */
+        border-radius: 8px;
+    }
+    
+    /* Força os textos e ícones dentro do card a usarem a sua cor laranja */
+    [data-testid="stUploadedFile"] div, 
+    [data-testid="stUploadedFile"] span, 
+    [data-testid="stUploadedFile"] svg {
+        color: #f39334 !important; 
+    }
+    
+    /* Remove o fundo branco do botão de fechar (X) do arquivo */
+    button[title="Remove file"] {
+        background-color: transparent !important;
+    }
+    button[title="Remove file"]:hover {
+        background-color: #9D4EDD !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
