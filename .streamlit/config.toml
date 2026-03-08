@@ -1,0 +1,26 @@
+[theme]
+# A cor principal do seu app (usada em botões primários, barras de progresso e links)
+# Coloquei um azul escuro corporativo, muito usado em painéis de análise de dados.
+primaryColor = "#005BAC"
+
+# A cor de fundo principal da área onde os resultados (as atas) vão aparecer.
+# Branco puro para garantir o máximo de contraste com o texto.
+backgroundColor = "#FFFFFF"
+
+# A cor de fundo da barra lateral (sidebar) e dos fundos dos inputs (como o uploader).
+# Um cinza super claro para separar visualmente as áreas da tela.
+secondaryBackgroundColor = "#F8F9FA"
+
+# A cor do texto principal.
+# Em vez de preto puro (#000000) que cansa a vista em telas, usamos um cinza chumbo bem escuro.
+textColor = "#212529"
+
+# A família de fontes.
+# 'sans serif' puxa a fonte padrão sem serifa do sistema (mais limpa e moderna para dashboards).
+font = "sans serif"
+
+[server]
+# Esta configuração oculta aquele menu padrão chato de "hamburger" no canto superior direito
+# e tira a marca d'água "Made with Streamlit" no rodapé, deixando o app mais profissional.
+enableCORS = false
+enableXsrfProtection = false

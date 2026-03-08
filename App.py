@@ -14,7 +14,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Tabela de Preços (A cada 1 Milhão de Tokens em Dólares) ---
 PRECOS_MODELOS = {
     "gemini-2.5-flash-lite": {"in": 0.075, "out": 0.30},
     "gemini-2.5-flash": {"in": 0.075, "out": 0.30},
@@ -35,9 +34,12 @@ client = inicializar_cliente()
 # --- 3. Controle de Estado (Session State) ---
 if "resultados_processados" not in st.session_state:
     st.session_state.resultados_processados = {}
+if "mostrar_animacao" not in st.session_state:
+    st.session_state.mostrar_animacao = False
 
 def limpar_memoria():
     st.session_state.resultados_processados = {}
+    st.toast("Memória limpa com sucesso!", icon="🧹") # Micro-interação elegante
 
 # --- 4. Funções Modulares ---
 def extrair_texto_pdf(arquivo):
@@ -46,57 +48,55 @@ def extrair_texto_pdf(arquivo):
     return texto.strip()
 
 def gerar_prompt_multiplas_atas(texto_transcricao):
-    # Prompt mesclado: Instruções originais do seu amigo + Lógica de múltiplas reuniões + Features novas
+    # Prompt otimizado para forçar a IA a usar HTML/Emojis no Score
     return f"""
     Imagine que você é um revisor técnico.
 
-    Vou te enviar anotações brutas que PODEM conter transcrições de UMA OU MÚLTIPLAS reuniões comerciais diferentes (muitas vezes separadas por marcações como *AT NOME_DA_EMPRESA*, trocas de interlocutores ou mudanças completas de contexto). Elas podem estar desorganizadas, incompletas, informais ou fora de ordem.
+    Vou te enviar anotações brutas que PODEM conter transcrições de UMA OU MÚLTIPLAS reuniões comerciais diferentes.
 
     Sua tarefa tem duas etapas:
     1. Identifique e separe cada reunião distinta presente no texto.
-    2. Para CADA reunião identificada, interprete as anotações e transforme-as em uma ata executiva curta, como um consultor faria após uma reunião com cliente. 
-    
-    A ata deve destilar apenas o que é estrategicamente relevante para o avanço comercial do projeto.
+    2. Para CADA reunião identificada, interprete as anotações e transforme-as em uma ata executiva curta.
 
     Para CADA ata gerada, estruture OBRIGATORIAMENTE a resposta nos seguintes tópicos:
 
     ## 🏢 Ata de Reunião: [Nome da Empresa ou Cliente Identificado]
 
     Rapport:
-    Contexto humano da reunião e nível de abertura do contato. Inclua elementos que ajudem no relacionamento comercial (clima da conversa, interesse demonstrado, contexto da empresa ou momento interno relevante).
+    Contexto humano da reunião e nível de abertura do contato.
 
     Com quem eu estou falando:
-    Cargo da pessoa, área de atuação e qual é seu papel no processo decisório (decision maker, influenciador, gatekeeper ou ponte para outras áreas).
+    Cargo da pessoa, área de atuação e papel no processo decisório.
 
-    O que o projeto está se encaminhando para ser (Solução + Resumo rápido):
-    Síntese da oportunidade de projeto identificada. Descreva de forma clara qual problema pode ser resolvido e qual tipo de solução pode ser proposta.
+    O que o projeto está se encaminhando para ser:
+    Síntese da oportunidade de projeto identificada. Problema a ser resolvido e solução proposta.
 
     Fatores cruciais de mapeamento:
-    Descreva apenas os elementos que impactam diretamente a viabilidade do projeto: sistemas existentes, estrutura de dados, ferramentas utilizadas, cloud, processos atuais, nível de maturidade digital, limitações técnicas e principais dores operacionais.
+    Elementos que impactam diretamente a viabilidade: sistemas existentes, estrutura de dados, cloud, processos, nível de maturidade digital.
 
     Stack Tecnológico (Glossário):
-    - Liste aqui APENAS ferramentas, softwares, linguagens e infraestrutura citadas na reunião (ex: AWS, Python, Git, Power Apps, Excel, SAP).
-    - Use bullet points APENAS nesta seção. Se não houver citação, escreva "Nenhuma tecnologia específica mencionada".
+    - Liste aqui APENAS ferramentas, softwares, linguagens e infraestrutura citadas.
+    - Use bullet points APENAS nesta seção.
 
     Termômetro do Lead (Scoring):
-    Nota de [1 a 10] para o nível de aquecimento do cliente, interesse na solução e urgência do projeto. Adicione 1 frase curta justificando a nota.
+    Nota de 1 a 10 para o aquecimento do cliente e urgência.
+    OBRIGATÓRIO colocar um destes emojis ao lado da nota para classificação visual: 
+    🔴 (para notas de 1 a 4)
+    🟡 (para notas de 5 a 7)
+    🟢 (para notas de 8 a 10)
+    Adicione 1 frase justificando a nota.
 
     Próximo passo claro:
-    Próxima ação comercial objetiva (ex.: envio de proposta, assinatura de NDA, conexão com outro time, nova reunião ou validação interna do cliente).
+    Próxima ação comercial objetiva.
 
     ---
     Regras importantes:
-    - Se você identificar 1 reunião, gere apenas 1 ata. Se identificar múltiplas reuniões diferentes, gere atas sequenciais.
+    - Se você identificar múltiplas reuniões diferentes, gere atas sequenciais.
     - Separe cada ata visualmente com uma linha (---).
     - Com EXCEÇÃO da seção "Stack Tecnológico", escreva em texto corrido, SEM listas ou bullet points.
     - A ata deve ser curta, clara e objetiva.
-    - Priorize dor do cliente, maturidade digital e oportunidade de projeto.
-    - Elimine informações irrelevantes que não ajudam a avançar comercialmente.
-    - Quando necessário, reorganize e interprete as anotações para torná-las claras e estratégicas.
-    - Se houver múltiplas informações técnicas ou ferramentas, resuma sem perder o essencial na seção Fatores cruciais, e liste os nomes no Stack Tecnológico.
 
-    Agora transforme as seguintes anotações na ata padrão.
-    Transcrição:
+    Transcrição Bruta a ser analisada:
     {texto_transcricao}
     """
 
@@ -134,40 +134,45 @@ opcoes_modelos = {
 }
 
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2097/2097726.png", width=100)
-    st.title("Configurações")
+    st.markdown("### ⚙️ Painel de Controlo")
     
     modelo_selecionado_nome = st.selectbox(
         "🧠 Escolha o Modelo de IA:",
         options=list(opcoes_modelos.keys()),
-        index=1,
-        help="Modelos Pesados para maior precisão analítica. Modelos Básicos para velocidade e economia."
+        index=1
     )
     modelo_id_real = opcoes_modelos[modelo_selecionado_nome]
     
     st.divider()
-    if st.button("🧹 Limpar Dados da Sessão", on_click=limpar_memoria):
-        st.success("Memória limpa!")
+    st.button("🧹 Limpar Dados e Reiniciar", on_click=limpar_memoria, use_container_width=True)
 
 st.title("💼 Assistente de Atas e Diagnóstico")
-st.markdown("Extraia inteligência de reuniões com padronização executiva rigorosa.")
+st.markdown("Extraia inteligência de reuniões com padronização executiva rigorosa e análise de viabilidade técnica.")
 st.divider()
 
 if client is None:
     st.error("🚨 Chave de API não encontrada nos Secrets.")
     st.stop()
 
+# Layout de Upload
 arquivos_pdf = st.file_uploader("📂 Faça o upload das transcrições (PDFs)", type=["pdf"], accept_multiple_files=True)
+
+# Lógica de Empty State (Estado Vazio)
+if not arquivos_pdf and not st.session_state.resultados_processados:
+    st.markdown("""
+        <div style="text-align: center; padding: 60px; background-color: #F8F9FA; border-radius: 15px; border: 2px dashed #CED4DA; margin-top: 20px;">
+            <h2 style="color: #6C757D;">Nenhum documento carregado</h2>
+            <p style="color: #6C757D; font-size: 16px;">Arraste os seus ficheiros PDF para a área acima ou clique para procurar.<br>A IA fará a leitura, separação de reuniões e análise de viabilidade técnica automaticamente.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # --- 6. Fluxo de Execução Principal ---
 if arquivos_pdf and st.button("🚀 Processar Todos os Arquivos", type="primary"):
     with st.container():
         for arquivo in arquivos_pdf:
-            st.subheader(f"📄 Analisando: {arquivo.name}")
-            
-            with st.status(f"Processando {arquivo.name}...", expanded=True) as status:
+            with st.status(f"A processar {arquivo.name}...", expanded=True) as status:
                 try:
-                    st.write("Extraindo texto...")
+                    st.write("Extraindo texto do PDF...")
                     texto_da_reuniao = extrair_texto_pdf(arquivo)
                     
                     if not texto_da_reuniao:
@@ -183,71 +188,64 @@ if arquivos_pdf and st.button("🚀 Processar Todos os Arquivos", type="primary"
                         contents=prompt_formatado
                     )
                     fim_timer = time.time()
-                    tempo_decorrido = fim_timer - inicio_timer
                     
                     tokens_in = resposta.usage_metadata.prompt_token_count if hasattr(resposta, 'usage_metadata') and resposta.usage_metadata else 0
                     tokens_out = resposta.usage_metadata.candidates_token_count if hasattr(resposta, 'usage_metadata') and resposta.usage_metadata else 0
                     
                     st.session_state.resultados_processados[arquivo.name] = {
-                        "texto_original": texto_da_reuniao,
                         "texto_gerado": resposta.text,
                         "tokens_in": tokens_in,
                         "tokens_out": tokens_out,
                         "modelo_usado": modelo_id_real,
-                        "tempo_segundos": tempo_decorrido
+                        "tempo_segundos": (fim_timer - inicio_timer)
                     }
                     
-                    status.update(label="Concluído!", state="complete")
+                    status.update(label=f"Diagnóstico de {arquivo.name} concluído!", state="complete")
                     
                 except Exception as e:
-                    status.update(label="Erro", state="error")
+                    status.update(label="Erro no processamento", state="error")
                     st.error(f"Erro na API ({modelo_id_real}): {e}")
                     
+    st.session_state.mostrar_animacao = True
     st.rerun()
 
 # --- 7. Exibição, Edição e Governança ---
 if st.session_state.resultados_processados:
-    st.divider()
+    
+    # Micro-interação de Sucesso
+    if st.session_state.mostrar_animacao:
+        st.balloons()
+        st.toast("Todos os ficheiros foram processados com sucesso!", icon="✅")
+        st.session_state.mostrar_animacao = False
+
     st.header("🎯 Resultados, Validação e Exportação")
     
     for nome_arquivo, dados in st.session_state.resultados_processados.items():
         with st.expander(f"⚙️ Gerenciar Ata: {nome_arquivo}", expanded=True):
             
+            # Utilização de Cards (border=True) para organizar visualmente o texto
             st.markdown("##### 📝 Validação e Edição")
-            st.info("Ata gerada. Valide a listagem do Stack Tecnológico e o Score do Lead. Alterações serão salvas no Word.")
+            st.info("Ata gerada com sucesso. O Termómetro do Lead foi codificado por cores automaticamente pela IA.")
             
-            texto_editado = st.text_area(
-                label="Área de edição:",
-                value=dados['texto_gerado'],
-                height=450,
-                key=f"edit_{nome_arquivo}",
-                label_visibility="collapsed"
-            )
+            with st.container(border=True):
+                texto_editado = st.text_area(
+                    label="Área de edição:",
+                    value=dados['texto_gerado'],
+                    height=450,
+                    key=f"edit_{nome_arquivo}",
+                    label_visibility="collapsed"
+                )
             
             st.markdown("##### 📥 Exportar Entregáveis")
             docx_file = criar_docx(texto_editado)
             
             col_d1, col_d2 = st.columns(2)
             with col_d1:
-                st.download_button(
-                    label="📄 Exportar para Word (.docx)",
-                    data=docx_file,
-                    file_name=f"Atas_Diagnostico_{nome_arquivo.replace('.pdf', '')}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    key=f"docx_{nome_arquivo}",
-                    use_container_width=True
-                )
+                st.download_button("📄 Exportar para Word (.docx)", data=docx_file, file_name=f"Atas_{nome_arquivo.replace('.pdf', '')}.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document", key=f"docx_{nome_arquivo}", use_container_width=True)
             with col_d2:
-                st.download_button(
-                    label="📝 Exportar Texto Bruto (.txt)",
-                    data=texto_editado,
-                    file_name=f"Atas_Diagnostico_{nome_arquivo.replace('.pdf', '')}.txt",
-                    mime="text/plain",
-                    key=f"txt_{nome_arquivo}",
-                    use_container_width=True
-                )
+                st.download_button("📝 Exportar Texto Bruto (.txt)", data=texto_editado, file_name=f"Atas_{nome_arquivo.replace('.pdf', '')}.txt", mime="text/plain", key=f"txt_{nome_arquivo}", use_container_width=True)
             
-            # --- Painel Nerd (Governança e Performance) ---
+            # --- Painel Nerd em formato de Cards ---
             mod = dados['modelo_usado']
             t_in = dados['tokens_in']
             t_out = dados['tokens_out']
@@ -261,12 +259,16 @@ if st.session_state.resultados_processados:
             with st.expander("🤓 Estatística para Nerd (Auditoria de Custo e IA)"):
                 st.caption(f"**Modelo Utilizado:** `{mod}`")
                 
-                col_t1, col_t2, col_t3 = st.columns(3)
-                col_t1.metric("Total de Tokens", f"{(t_in + t_out):,}")
-                col_t2.metric("Custo Estimado", f"${custo_total:.5f}")
-                col_t3.metric("Tempo de API", f"{tempo:.2f} s")
-                
-                col_t4, col_t5, col_t6 = st.columns(3)
-                col_t4.metric("Compressão de Ruído", f"{taxa_compressao:.1f}%", help="O quanto de falas irrelevantes a IA filtrou.")
-                col_t5.metric("Velocidade (Tokens/s)", f"{tokens_por_segundo:,.0f} t/s", help="Avalia se a Cloud do Google está sofrendo latência.")
-                col_t6.metric("Economia Estimada", f"~{(t_in / 300):.0f} min", help="Tempo humano estimado para ler esse volume de tokens (300 tokens/minuto).")
+                # Envolver as métricas num container com borda para dar aspeto de Dashboard
+                with st.container(border=True):
+                    col_t1, col_t2, col_t3 = st.columns(3)
+                    col_t1.metric("Total de Tokens", f"{(t_in + t_out):,}")
+                    col_t2.metric("Custo Estimado", f"${custo_total:.5f}")
+                    col_t3.metric("Tempo de API", f"{tempo:.2f} s")
+                    
+                    st.divider()
+                    
+                    col_t4, col_t5, col_t6 = st.columns(3)
+                    col_t4.metric("Compressão de Ruído", f"{taxa_compressao:.1f}%")
+                    col_t5.metric("Velocidade", f"{tokens_por_segundo:,.0f} t/s")
+                    col_t6.metric("Economia Estimada", f"~{(t_in / 300):.0f} min")
