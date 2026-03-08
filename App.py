@@ -273,29 +273,28 @@ if st.session_state.resultados_processados:
                     col_t5.metric("Velocidade", f"{tokens_por_segundo:,.0f} t/s")
                     col_t6.metric("Economia Estimada", f"~{(t_in / 300):.0f} min")
 
-# --- Injeção de CSS Customizado para o File Uploader ---
+# --- Injeção de CSS: Detalhes em Laranja Poli e Roxo Dados ---
 st.markdown("""
     <style>
-    /* Altera o fundo do card do arquivo carregado */
-    [data-testid="stUploadedFile"] {
-        background-color: #120421 !important; /* Usando o seu secondaryBackgroundColor */
-        border: 1px solid #9D4EDD !important; /* Borda usando a sua primaryColor */
-        border-radius: 8px;
+    /* Estiliza o fundo da área de upload para o Azul Poli Intermediário */
+    [data-testid="stUploadedFile"], [data-testid="stFileUploader"] > section {
+        background-color: #112240 !important;
+        border: 1px solid #112240 !important;
     }
     
-    /* Força os textos e ícones dentro do card a usarem a sua cor laranja */
-    [data-testid="stUploadedFile"] div, 
-    [data-testid="stUploadedFile"] span, 
-    [data-testid="stUploadedFile"] svg {
+    /* Borda Laranja Poli ao passar o mouse ou arrastar o arquivo */
+    [data-testid="stFileUploader"] > section:hover {
+        border: 1px dashed #f39334 !important;
+    }
+
+    /* Ícone de upload no centro em Laranja Poli */
+    [data-testid="stFileUploader"] svg {
         color: #f39334 !important; 
     }
     
-    /* Remove o fundo branco do botão de fechar (X) do arquivo */
-    button[title="Remove file"] {
-        background-color: transparent !important;
-    }
+    /* Nome do arquivo e ícone de remover mantendo o Roxo Dados ao interagir */
     button[title="Remove file"]:hover {
-        background-color: #9D4EDD !important;
+        color: #9D4EDD !important;
     }
     </style>
 """, unsafe_allow_html=True)

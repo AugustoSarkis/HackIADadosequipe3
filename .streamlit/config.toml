@@ -1,23 +1,25 @@
 [theme]
-# Roxo Normal/Vibrante (Primary Color)
-# Usado para botões, barras de carregamento e destaques. É o roxo "elétrico" 
-# que chama a atenção do usuário para a ação principal.
+# Roxo Dados (Primary Color)
+# Mantemos o roxo vibrante do seu núcleo para os botões principais e barras de progresso.
+# É a cor que vai guiar o clique do usuário.
 primaryColor = "#9D4EDD"
 
-# Roxo Bem Escuro (Background Color)
-# Substitui o preto/cinza do fundo por um roxo extremamente profundo (quase meia-noite).
-# Isso cria o clima noturno e tecnológico, mas sem ser um preto sem graça.
-backgroundColor = "#080558"
+# Azul Poli Profundo (Background Color)
+# Em vez de preto puro (que é muito agressivo), usamos um azul marinho extremamente escuro.
+# Traz a identidade da Poli Júnior de forma elegante e descansa os olhos.
+backgroundColor = "#0A192F"
 
-# Roxo Escuro/Intermediário (Secondary Background Color)
-# Usado na barra lateral e no fundo de áreas de texto/upload. É um tom de roxo 
-# levemente mais claro que o fundo principal para criar uma "camada" visual sobreposta.
-secondaryBackgroundColor = "#000000"
+# Azul Poli Intermediário (Secondary Background Color)
+# Um tom de azul marinho levemente mais claro para a barra lateral e caixas de texto.
+# Cria uma separação visual sofisticada do fundo.
+secondaryBackgroundColor = "#112240"
 
+# Branco Gelo/Azulado (Text Color)
+# NUNCA use cores super saturadas (como laranja) para ler relatórios. 
+# Este "off-white" garante contraste perfeito contra o azul escuro sem ofuscar a visão.
+textColor = "#E6F1FF"
 
-textColor = "#f39334"
-
-# Fonte sem serifa, limpa e padronizada para dashboards de dados.
+# Fonte sem serifa, limpa e padronizada.
 font = "sans serif"
 
 [server]
