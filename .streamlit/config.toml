@@ -1,25 +1,28 @@
 [theme]
-# A cor principal do seu app (usada em botões primários, barras de progresso e ícones)
-# Um roxo elétrico e vibrante para dar o destaque tecnológico exato do núcleo.
-primaryColor = "#7C3AED"
+# Roxo Normal/Vibrante (Primary Color)
+# Usado para botões, barras de carregamento e destaques. É o roxo "elétrico" 
+# que chama a atenção do usuário para a ação principal.
+primaryColor = "#9D4EDD"
 
-# A cor de fundo principal da área onde as atas e resultados vão aparecer.
-# Substituímos o branco por um tom de "grafite/noturno" de IDEs para conforto visual.
-backgroundColor = "#0E1117"
+# Roxo Bem Escuro (Background Color)
+# Substitui o preto/cinza do fundo por um roxo extremamente profundo (quase meia-noite).
+# Isso cria o clima noturno e tecnológico, mas sem ser um preto sem graça.
+backgroundColor = "#130525"
 
-# A cor de fundo da barra lateral (sidebar) e dos fundos dos inputs (como o uploader).
-# Um cinza-azulado levemente mais claro que o fundo principal para criar profundidade.
-secondaryBackgroundColor = "#1A1C23"
+# Roxo Escuro/Intermediário (Secondary Background Color)
+# Usado na barra lateral e no fundo de áreas de texto/upload. É um tom de roxo 
+# levemente mais claro que o fundo principal para criar uma "camada" visual sobreposta.
+secondaryBackgroundColor = "#220B3D"
 
-# A cor do texto principal.
-# Como o fundo agora é escuro, o texto precisa ser invertido para um "off-white" 
-# (quase branco), garantindo alto contraste e leitura dinâmica sem ofuscar a visão.
-textColor = "#FAFAFA"
+# Roxo Muito Claro/Lilás (Text Color)
+# Em telas escuras, texto branco puro pode "estourar" a visão após muita leitura. 
+# Usar um lilás super claro (quase branco) mantém o contraste excelente para ler 
+# as atas longas, descansando os olhos e mantendo a harmonia de cores.
+textColor = "#F3E8FF"
 
-# A família de fontes (mantida limpa e moderna).
+# Fonte sem serifa, limpa e padronizada para dashboards de dados.
 font = "sans serif"
 
 [server]
-# Ocultar o menu padrão e a marca d'água para manter a cara de software próprio.
 enableCORS = false
 enableXsrfProtection = false
