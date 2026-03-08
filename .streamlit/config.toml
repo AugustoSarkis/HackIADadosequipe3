@@ -7,12 +7,12 @@ primaryColor = "#9D4EDD"
 # Roxo Bem Escuro (Background Color)
 # Substitui o preto/cinza do fundo por um roxo extremamente profundo (quase meia-noite).
 # Isso cria o clima noturno e tecnológico, mas sem ser um preto sem graça.
-backgroundColor = "#130525"
+backgroundColor = "#080558"
 
 # Roxo Escuro/Intermediário (Secondary Background Color)
 # Usado na barra lateral e no fundo de áreas de texto/upload. É um tom de roxo 
 # levemente mais claro que o fundo principal para criar uma "camada" visual sobreposta.
-secondaryBackgroundColor = "#120421"
+secondaryBackgroundColor = "#000000"
 
 
 textColor = "#f39334"
