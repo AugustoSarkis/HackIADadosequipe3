@@ -44,12 +44,63 @@ if arquivo_pdf is not None:
                     st.stop()
                 
                 prompt = f"""
-                Você atua como analista de projetos. Sua tarefa é analisar a transcrição de uma reunião de diagnóstico e estruturar as informações para a equipe.
-                
-                Gere uma saída com duas partes distintas:
-                1. ATA ESTRUTURADA: Resuma os principais pontos discutidos, organizando em tópicos executivos claros.
-                2. GARGALOS PARA A PROPOSTA: Liste estritamente quais informações essenciais (ex: escopo de dados, integrações, regras de negócio) não foram mapeadas na conversa e que precisam ser levantadas com o cliente para dimensionar adequadamente o projeto.
-                
+                Imagine que você é um revisor técnico.
+
+Vou te enviar anotações brutas de uma reunião comercial. Elas podem estar desorganizadas, incompletas, informais ou fora de ordem.
+
+Sua tarefa é interpretar essas anotações e transformá-las em uma ata executiva curta, como um consultor faria após uma reunião com cliente.
+
+A ata deve destilar apenas o que é estrategicamente relevante para o avanço comercial do projeto.
+
+Estruture obrigatoriamente a resposta nos seguintes tópicos, sem subtópicos e sem bullet points:
+
+Rapport:
+
+
+
+Contexto humano da reunião e nível de abertura do contato. Inclua elementos que ajudem no relacionamento comercial (clima da conversa, interesse demonstrado, contexto da empresa ou momento interno relevante).
+
+Com quem eu estou falando:
+
+
+
+Cargo da pessoa, área de atuação e qual é seu papel no processo decisório (decision maker, influenciador, gatekeeper ou ponte para outras áreas).
+
+O que o projeto está se encaminhando para ser (Solução + Resumo rápido):
+
+
+
+Síntese da oportunidade de projeto identificada. Descreva de forma clara qual problema pode ser resolvido e qual tipo de solução pode ser proposta.
+
+Fatores cruciais de mapeamento:
+
+
+
+Descreva apenas os elementos que impactam diretamente a viabilidade do projeto: sistemas existentes, estrutura de dados, ferramentas utilizadas, cloud, processos atuais, nível de maturidade digital, limitações técnicas e principais dores operacionais.
+
+Próximo passo claro:
+
+
+
+Próxima ação comercial objetiva (ex.: envio de proposta, assinatura de NDA, conexão com outro time, nova reunião ou validação interna do cliente).
+
+Regras importantes:
+
+
+
+Escreva em texto corrido, sem listas.
+
+A ata deve ser curta, clara e objetiva.
+
+Priorize dor do cliente, maturidade digital e oportunidade de projeto.
+
+Elimine informações irrelevantes que não ajudam a avançar comercialmente.
+
+Quando necessário, reorganize e interprete as anotações para torná-las claras e estratégicas.
+
+Se houver múltiplas informações técnicas ou ferramentas, resuma sem perder o essencial.
+
+Agora transforme as seguintes anotações na ata padrão.
                 Transcrição:
                 {texto_da_reuniao}
                 """
